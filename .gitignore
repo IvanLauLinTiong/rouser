@@ -1,0 +1,23 @@
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+
+# Jupyter misc. files
+.ipynb_checkpoints
+*.ipynb
+
+
+# data & artifacts
+data
+runs
+*.pth
+
+
+# Other folders & files
+test
+temp*
+requirements*.txt
+!requirements.txt
+*.pdf
