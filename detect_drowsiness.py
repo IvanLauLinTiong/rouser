@@ -24,9 +24,6 @@ if __name__ == '__main__':
     # load model skeleton
     model = models.mobilenet.mobilenet_v2()
     
-    for param in model.parameters():
-        param.requires_grad = False
-    
     num_features = model.classifier[1].in_features
     model.classifier[1] = nn.Linear(num_features, len(classes))
 
@@ -62,10 +59,9 @@ if __name__ == '__main__':
                 # preprocessing frame
                 img = torch.from_numpy(frame)
                 img = img.permute(2, 0, 1) # (H, W, C) -> (C, H, W), channel last -> channel first
-                img = preprocess(img)
+                img = preprocess(img).to(device)
                 img.unsqueeze_(0)
-                img = img.to(device)
-
+                
                 # make detection
                 output = model(img)
                 _, preds = torch.max(output, 1)

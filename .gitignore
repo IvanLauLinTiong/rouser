@@ -21,3 +21,9 @@ temp*
 requirements*.txt
 !requirements.txt
 *.pdf
+system*
+*.zip
+
+# build files
+build
+dist
