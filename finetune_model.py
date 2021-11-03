@@ -124,7 +124,7 @@ def main():
     BATCH_SIZE = 4
     NUM_WORKERS = 0
     LEARNING_RATE = 0.001
-    NUM_EPOCHS = 50
+    NUM_EPOCHS = 100
     
     # constants
     CHECKPOINT_STEPS = 10  # number of epochs after which to checkpoint the model
