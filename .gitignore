@@ -23,6 +23,7 @@ requirements*.txt
 *.pdf
 system*
 *.zip
+misc
 
 # build files
 build
