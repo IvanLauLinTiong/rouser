@@ -9,8 +9,7 @@ __pycache__/
 *.ipynb
 
 
-# data & artifacts
-data1
+# artifacts
 runs
 *.pth
 
