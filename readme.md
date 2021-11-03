@@ -57,13 +57,13 @@ python detect_drowsiness.py --on-gpu --model your/path/to/best/model
 ```
 Set `--on-gpu` flag if you want to evaluate model on GPU device
 
-### How to build app
+### How to Build App
 ```console
 python build.py
 ```
 
 
-### How to run app
+### How to Run App
 - Option 1: A `dist` folder is generated after running `build.py`. Inside `dist` folder, go to `bin` folder and locate `app.exe`. Simply double click it to launch and you are good to go. You may go to `sound` folder to change to your desired sounds/ringtones.
 
 - Option 2: On console
