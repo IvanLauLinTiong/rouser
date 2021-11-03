@@ -6,7 +6,7 @@ from PySide2.QtMultimediaWidgets import  QCameraViewfinder
 # from torchvision.models import mobilenetv2
 # import torchvision.transforms.functional as TF
 # import numpy as np
-import cv2
+# import cv2
 
 class MainWindow(QMainWindow):
     def __init__(self):

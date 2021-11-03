@@ -8,7 +8,6 @@ import torch.nn as nn
 from torch.optim import SGD, lr_scheduler
 from torch.utils.data import DataLoader, random_split
 from torchvision import datasets, models, transforms
-import numpy as np
 import time
 import os
 import copy
@@ -125,7 +124,7 @@ def main():
     BATCH_SIZE = 4
     NUM_WORKERS = 0
     LEARNING_RATE = 0.001
-    NUM_EPOCHS = 100
+    NUM_EPOCHS = 50
     
     # constants
     CHECKPOINT_STEPS = 10  # number of epochs after which to checkpoint the model
@@ -134,17 +133,17 @@ def main():
     # for logging
     writer = SummaryWriter(LOG_DIR)
 
-    # Define data transformations
-    composed_trans = transforms.Compose([
+    # Define image preprocessing transformations
+    preprocess = transforms.Compose([
             transforms.Resize(256),
+            transforms.Grayscale(3),
             transforms.RandomHorizontalFlip(),
-            # transforms.RandomAffine(degrees=10, translate=(0.25, 0.25)),
             transforms.ToTensor(),
-            transforms.Normalize( np.array([0.485, 0.456, 0.406]), np.array([0.229, 0.224, 0.225]))
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
 
     # Load data
-    dataset = datasets.ImageFolder(DATA_DIR, composed_trans)
+    dataset = datasets.ImageFolder(DATA_DIR, preprocess)
     classes = dataset.classes 
     # print(f"Classes: {classes}") # Classes: ['awake', 'background', 'drowsy']
 
@@ -225,7 +224,8 @@ def main():
     time_elapsed = time.time() - since
     print(f"Training complete in {time_elapsed//60:.0f}m {time_elapsed%60:.0f}s")
     print("Best val Acc: {:4f}".format(best_acc))
-
+    
+    print(f"Saving best model as best_model_{current_time}.pt to {MODEL_DIR}")
     torch.save(best_model_state, os.path.join(LOG_DIR, 'best_model.pt'))
     torch.save(best_model_state, os.path.join(MODEL_DIR, f'best_model_{current_time}.pt'))
 
