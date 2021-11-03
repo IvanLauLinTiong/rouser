@@ -42,16 +42,14 @@ try:
     PyInstaller.__main__.run([
         'entry_point/app.py',
         '--onedir',
-        # '--onefile',
         '--noconsole',
         f'--distpath={DIST_PATH}',
+        #'--paths=../torch_env/lib/site-packages/cv2/'  #D:\sw_projects\ml_projects\pytorch_hackathon\torch_env\lib\site-packages\cv2\__init__.py
         '--noupx',
         '--clean'
     ])
 
     # There's a folder named 'app', rename it to 'bin' in --onedir mode,
-    # comment this line if build in --onefile mode
-    # os.rename(f'{DIST_PATH}' + 'app', f'{DIST_PATH}' + 'bin')
     os.rename(os.path.join(f'{DIST_PATH}', 'app'), os.path.join(f'{DIST_PATH}', 'bin'))
 
     # clean up

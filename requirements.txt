@@ -1,6 +1,5 @@
 -f https://download.pytorch.org/whl/cu102/torch_stable.html
-numpy==1.21.3
-opencv-python== 4.5.4.58
+opencv-python==4.5.3.56
 pyinstaller==4.6
 PySide2==5.15.2
 tensorboard==2.7.0
