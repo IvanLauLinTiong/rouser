@@ -29,12 +29,12 @@ if __name__ == '__main__':
 
     # load model based on device type
     if args.on_gpu:
-        print('use gpu')
+        print('using gpu')
         device = torch.device("cuda")
         model.load_state_dict(torch.load(args.model))
         model = model.to(device)
     else:
-        print('use cpu')
+        print('using cpu')
         device = torch.device("cpu")
         model.load_state_dict(torch.load(args.model, map_location=device))
 

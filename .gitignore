@@ -27,3 +27,4 @@ system*
 # build files
 build
 dist
+*.spec
