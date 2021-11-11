@@ -1,4 +1,10 @@
 ## Rouser
+
+## Live Demo
+Youtube: [watch](https://youtu.be/far2xwE4dbc)
+
+Try it out: [download](https://github.com/IvanLauLinTiong/rouser/releases/download/v0.0.1/dist.7z)
+
 ### Supported Platform:
  - Window 10 OS
 
@@ -62,9 +68,8 @@ Set `--on-gpu` flag if you want to evaluate model on GPU device
 python build.py
 ```
 
-
 ### How to Run App
-- Option 1: A `dist` folder is generated after running `build.py`. Inside `dist` folder, go to `bin` folder and locate `app.exe`. Simply double click it to launch and you are good to go. You may go to `sound` folder to change to your desired sounds/ringtones.
+- Option 1: A `dist` folder is generated after running `build.py` or you may get it [here](https://github.com/IvanLauLinTiong/rouser/releases/download/v0.0.1/dist.7z). Inside `dist` folder, go to `bin` folder and locate `app.exe`. Simply double click it to launch and you are good to go. You may go to `sound` folder to change your choice of sounds/ringtones.
 
 - Option 2: On console
 ```console
