@@ -31,22 +31,20 @@ def checkpoint(model, filepath):
 
 def train_epoch(model, train_loader, criterion, optimizer, device):
     """Train the model for 1 epoch
-
     Args:
         model: nn.Module
         train_loader: train DataLoader
         criterion: callable loss function
         optimizer: pytorch optimizer
         device: torch.device
-
     Returns
     -------
     Tuple[Float, Float]
-        cummulated loss and cummulated number of correct labels for current data batch
+        average train loss and average train accuracy for current epoch
     """
 
-    train_loss = 0.0
-    train_corrects = 0.0
+    train_losses = []
+    train_corrects = []
     model.train()
 
     # Iterate over data.
@@ -55,41 +53,40 @@ def train_epoch(model, train_loader, criterion, optimizer, device):
         labels = labels.to(device)
 
         # prediction
-        optimizer.zero_grad()
         outputs = model(inputs)
 
         # calculate loss
         _, preds = torch.max(outputs, 1)
-        train_loss = criterion(outputs, labels)
+        loss = criterion(outputs, labels)
 
         # backprop
-        train_loss.backward()
+        optimizer.zero_grad()
+        loss.backward()
         optimizer.step()
 
         # statistics
-        train_loss += train_loss.item()
-        train_corrects += torch.sum(preds == labels.data).item()
+        train_losses.append(loss.item())
+        train_corrects.append(torch.sum(preds == labels.data).item())
 
-    return train_loss, train_corrects
+    return sum(train_losses)/len(train_losses), sum(train_corrects)/len(train_corrects)
 
 
 def val_epoch(model, val_loader, criterion, device):
     """Validate the model for 1 epoch
-
     Args:
         model: nn.Module
         val_loader: train DataLoader
         criterion: callable loss function
         device: torch.device
-    
+
     Returns
     -------
     Tuple[Float, Float]
-        cummulated loss and cummulated number of correct labels for current data batch
+        average val loss and average val accuracy for current epoch
     """
 
-    val_loss = 0.0
-    val_corrects = 0.0
+    val_losses = []
+    val_corrects = []
     model.eval()
 
     # Iterate over data
@@ -103,13 +100,13 @@ def val_epoch(model, val_loader, criterion, device):
 
             # calculate loss
             _, preds = torch.max(outputs, 1)
-            val_loss = criterion(outputs, labels)
+            loss = criterion(outputs, labels)
 
             # statistics
-            val_loss += val_loss.item()
-            val_corrects += torch.sum(preds == labels.data).item()
+            val_losses.append(loss.item())
+            val_corrects.append(torch.sum(preds == labels.data).item())
 
-    return val_loss, val_corrects
+    return sum(val_losses)/len(val_losses), sum(val_corrects)/len(val_corrects)
 
 
 def main():
@@ -181,15 +178,10 @@ def main():
     # START TRAINING MODEL
     best_model_state = copy.deepcopy(model.state_dict())
     best_acc = 0.0
-    # train_losses = []
-    # val_losses = []
     since = time.time()
-    for epoch in range(NUM_EPOCHS):
+    for epoch in range(1, NUM_EPOCHS + 1):
         # train
-        train_loss, train_corrects = train_epoch(model, train_loader, criterion, optimizer, device)
-        # train_losses.append(train_loss)
-        train_loss /= train_size
-        train_acc = train_corrects / train_size
+        train_loss, train_acc = train_epoch(model, train_loader, criterion, optimizer, device)
         message = f'Epoch: {epoch}/{NUM_EPOCHS} \tTrainLoss: {train_loss:.4f} \tTrainAcc: {train_acc:.4f}'
         writer.add_scalar("train_loss", train_loss, epoch)
         writer.add_scalar("train_accuracy", train_acc, epoch)
@@ -197,10 +189,7 @@ def main():
 
         # validation
         if len(val_data) > 0:  
-            val_loss, val_corrects = val_epoch(model, val_loader, criterion, device)
-            # val_losses.append(val_loss)
-            val_loss /= val_size
-            val_acc = val_corrects / val_size
+            val_loss, val_acc = val_epoch(model, val_loader, criterion, device)
             message += f'\tValLoss: {val_loss:.4f} \tValAcc: {val_acc:.4f}'
             writer.add_scalar("val_loss", val_loss, epoch)
             writer.add_scalar("val_accuracy", val_acc, epoch)
