@@ -40,11 +40,11 @@ def train_epoch(model, train_loader, criterion, optimizer, device):
     Returns
     -------
     Tuple[Float, Float]
-        average train loss and accumulated train corrects for current epoch
+        average train loss and average train accuracy for current epoch
     """
 
     train_losses = []
-    train_corrects = 0.0
+    train_corrects = []
     model.train()
 
     # Iterate over data.
@@ -66,27 +66,27 @@ def train_epoch(model, train_loader, criterion, optimizer, device):
 
         # statistics
         train_losses.append(loss.item())
-        train_corrects += torch.sum(preds == labels.data).item()
+        train_corrects.append(torch.sum(preds == labels.data).item())
 
-    return sum(train_losses)/len(train_losses), train_corrects
+    return sum(train_losses)/len(train_losses), sum(train_corrects)/len(train_loader.dataset)
 
 
 def val_epoch(model, val_loader, criterion, device):
     """Validate the model for 1 epoch
     Args:
         model: nn.Module
-        val_loader: train DataLoader
+        val_loader: val DataLoader
         criterion: callable loss function
         device: torch.device
 
     Returns
     -------
     Tuple[Float, Float]
-        average val loss and accumulated val corrects for current epoch
+        average val loss and average val accuracy for current epoch
     """
 
     val_losses = []
-    val_corrects = 0.0
+    val_corrects = []
     model.eval()
 
     # Iterate over data
@@ -104,9 +104,9 @@ def val_epoch(model, val_loader, criterion, device):
 
             # statistics
             val_losses.append(loss.item())
-            val_corrects += torch.sum(preds == labels.data).item()
+            val_corrects.append(torch.sum(preds == labels.data).item())
 
-    return sum(val_losses)/len(val_losses), val_corrects
+    return sum(val_losses)/len(val_losses), sum(val_corrects)/len(val_loader.dataset)
 
 
 def main():
@@ -181,8 +181,7 @@ def main():
     since = time.time()
     for epoch in range(1, NUM_EPOCHS + 1):
         # train
-        train_loss, train_corrects = train_epoch(model, train_loader, criterion, optimizer, device)
-        train_acc = train_corrects / train_size
+        train_loss, train_acc = train_epoch(model, train_loader, criterion, optimizer, device)
         message = f'Epoch: {epoch}/{NUM_EPOCHS} \tTrainLoss: {train_loss:.4f} \tTrainAcc: {train_acc:.4f}'
         writer.add_scalar("train_loss", train_loss, epoch)
         writer.add_scalar("train_accuracy", train_acc, epoch)
@@ -190,8 +189,7 @@ def main():
 
         # validation
         if len(val_data) > 0:  
-            val_loss, val_corrects = val_epoch(model, val_loader, criterion, device)
-            val_acc = val_corrects / val_size
+            val_loss, val_acc = val_epoch(model, val_loader, criterion, device)
             message += f'\tValLoss: {val_loss:.4f} \tValAcc: {val_acc:.4f}'
             writer.add_scalar("val_loss", val_loss, epoch)
             writer.add_scalar("val_accuracy", val_acc, epoch)
